@@ -38,14 +38,16 @@ const Screen20WorkingOn = ({ onContinue, onBack, onNext, updateData, data, step 
         <h1 className="screen-title">What Are You Working On?</h1>
         <div className="stages-grid">
           {stages.map(stage => (
-            <div
+            <button
+              type="button"
               key={stage.id}
               className={`stage-card ${data.stage_type === stage.id ? 'selected' : ''}`}
+              aria-pressed={data.stage_type === stage.id}
               onClick={() => handleSelect(stage.id)}
             >
               <h3 className="stage-label">{stage.label}</h3>
               <p className="stage-desc">{stage.desc}</p>
-            </div>
+            </button>
           ))}
         </div>
         <button 

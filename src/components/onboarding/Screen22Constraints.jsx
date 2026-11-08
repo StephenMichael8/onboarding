@@ -41,14 +41,16 @@ const Screen22Constraints = ({ onContinue, onBack, onNext, updateData, data, ste
         <p className="screen-text">Select any that apply. This helps us match you with the right support.</p>
         <div className="constraints-grid">
           {constraints.map(constraint => (
-            <div
+            <button
+              type="button"
               key={constraint.id}
               className={`constraint-card ${selectedConstraints.includes(constraint.id) ? 'selected' : ''}`}
+              aria-pressed={selectedConstraints.includes(constraint.id)}
               onClick={() => handleToggle(constraint.id)}
             >
               <h3 className="constraint-label">{constraint.label}</h3>
               <p className="constraint-desc">{constraint.desc}</p>
-            </div>
+            </button>
           ))}
         </div>
         <button className="continue-btn" onClick={handleContinue}>

@@ -39,15 +39,17 @@ const Screen16PickRole = ({ onContinue, onBack, onNext, updateData, data, step }
         <p className="screen-text">You can switch later. We just need a default.</p>
         <div className="roles-grid">
           {roles.map(role => (
-            <div
+            <button
+              type="button"
               key={role.id}
               className={`role-card ${data.primary_role === role.id ? 'selected' : ''}`}
+              aria-pressed={data.primary_role === role.id}
               onClick={() => handleSelect(role.id)}
             >
-              <div className="role-icon">{role.icon}</div>
+              <div className="role-icon" aria-hidden="true">{role.icon}</div>
               <h3 className="role-label">{role.label}</h3>
               <p className="role-desc">{role.desc}</p>
-            </div>
+            </button>
           ))}
         </div>
         <button 

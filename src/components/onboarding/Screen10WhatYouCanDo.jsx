@@ -56,13 +56,15 @@ const Screen10WhatYouCanDo = ({ onContinue, onBack, onNext, updateData, data, st
           </p>
           <div className="brought-you-chips">
             {broughtYouOptions.map(option => (
-              <div
+              <button
+                type="button"
                 key={option}
                 className={`brought-you-chip ${whatBroughtYou === option ? 'selected' : ''}`}
+                aria-pressed={whatBroughtYou === option}
                 onClick={() => handleBroughtYouClick(option)}
               >
                 {option}
-              </div>
+              </button>
             ))}
           </div>
         </div>

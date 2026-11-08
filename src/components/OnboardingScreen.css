@@ -281,10 +281,24 @@
   z-index: 10;
   cursor: pointer;
   transition: transform 0.2s ease;
+  /* Native-button reset: transparent wrapper, inherit text */
+  background: none;
+  border: none;
+  width: 100%;
+  font-family: inherit;
+  color: inherit;
+  text-align: inherit;
+  appearance: none;
+  -webkit-appearance: none;
 }
 
 .center-section:hover {
   transform: scale(1.02);
+}
+
+.center-section:focus-visible {
+  outline: 2px solid #4a9eff;
+  outline-offset: 2px;
 }
 
 .click-hint {
@@ -519,12 +533,21 @@
   font-size: 14px;
   cursor: pointer;
   transition: all 0.2s ease;
+  font-family: inherit;
+  text-align: inherit;
+  appearance: none;
+  -webkit-appearance: none;
 }
 
 .interest-chip:hover {
   background: rgba(255, 255, 255, 0.2);
   border-color: rgba(255, 255, 255, 0.4);
   transform: translateY(-2px);
+}
+
+.interest-chip:focus-visible {
+  outline: 2px solid #4a9eff;
+  outline-offset: 2px;
 }
 
 .interest-chip.selected {

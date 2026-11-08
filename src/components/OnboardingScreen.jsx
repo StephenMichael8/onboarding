@@ -39,7 +39,7 @@ const OnboardingScreen = ({ onContinue, onBack, onNext, updateData, data, step }
       {/* Header */}
       <header className="onboarding-header">
         <div className="logo">
-          <div className="logo-icon-globe">🌍</div>
+          <div className="logo-icon-globe" aria-hidden="true">🌍</div>
           <span className="logo-text">Propel Earth</span>
         </div>
       </header>
@@ -109,7 +109,7 @@ const OnboardingScreen = ({ onContinue, onBack, onNext, updateData, data, step }
       </div>
 
       {/* Center Text */}
-      <div className="center-section" onClick={handleClick}>
+      <button type="button" className="center-section" onClick={handleClick}>
         <div className="click-hint">click here</div>
         <h1 className="do-more-together">Do More Together</h1>
         <div className="arrows-container">
@@ -118,23 +118,25 @@ const OnboardingScreen = ({ onContinue, onBack, onNext, updateData, data, step }
           <div className="arrow-line arrow-from-bottom-left"></div>
           <div className="arrow-line arrow-from-bottom-right"></div>
         </div>
-      </div>
+      </button>
 
       {/* Interest Chips */}
       <div className="interest-chips-container">
         <p className="interest-prompt">What brought you here? (tap any that apply)</p>
         <div className="interest-chips">
           {interestOptions.map(interest => (
-            <div
+            <button
+              type="button"
               key={interest}
               className={`interest-chip ${selectedInterests.includes(interest) ? 'selected' : ''}`}
+              aria-pressed={selectedInterests.includes(interest)}
               onClick={(e) => {
                 e.stopPropagation()
                 handleInterestClick(interest)
               }}
             >
               {interest}
-            </div>
+            </button>
           ))}
         </div>
       </div>

@@ -1,11 +1,11 @@
 # Propel Onboarding Flow
 
-A comprehensive 25-screen onboarding experience for Propel, designed to inspire, teach, and route users into personalized paths.
+A comprehensive multi-screen onboarding experience for Propel, designed to inspire, teach, and route users into personalized paths.
 
 ## Features
 
 - **Interactive Engagement**: Collect user preferences and interests throughout the informational screens
-- **25-Screen Flow**: Structured as Inspire → Teach → Prove → Consent → Identify → Role Module → Route → Commit
+- **Guided Flow**: Structured as Inspire → Teach → Prove → Consent → Identify → Role Module → Route → Commit
 - **Path-Based Routing**: AI suggests starting paths based on user inputs, not roles
 - **Hyper-Personalization**: Collects values, interests, personality signals, and community preferences
 - **Role Modules**: Founder, Provider, Investor, and Changemaker specific flows
@@ -13,9 +13,11 @@ A comprehensive 25-screen onboarding experience for Propel, designed to inspire,
 
 ## Tech Stack
 
-- React
-- Vite
+- React 18
+- Vite 8
 - CSS3 with animations
+- Vitest + React Testing Library (tests)
+- ESLint 9 (flat config: react / react-hooks / jsx-a11y)
 
 ## Getting Started
 
@@ -23,6 +25,35 @@ A comprehensive 25-screen onboarding experience for Propel, designed to inspire,
 npm install
 npm run dev
 ```
+
+## Scripts
+
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Start the Vite dev server |
+| `npm run build` | Production build to `dist/` |
+| `npm run preview` | Preview the production build locally |
+| `npm run lint` | Run ESLint |
+| `npm test` | Run the test suite once |
+| `npm run test:watch` | Run tests in watch mode |
+| `npm run coverage` | Run tests with a coverage report |
+
+## Production Readiness
+
+- **Testing & CI** — `npm test` runs unit/component tests; `.github/workflows/ci.yml`
+  runs lint → test → build → production-dependency audit on every push and PR.
+- **Error handling** — a top-level `ErrorBoundary` renders a recoverable fallback
+  if any screen throws, instead of a blank page.
+- **Persistence** — onboarding progress and answers are saved to `localStorage`,
+  so a refresh mid-flow resumes where the user left off (cleared on completion).
+- **Accessibility** — selection controls are native buttons with `aria-pressed`,
+  the progress bar exposes `role="progressbar"`, focus moves to each new screen,
+  and keyboard focus is visible.
+- **Security headers** — `public/_headers` ships a Content-Security-Policy plus
+  `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, and
+  `Permissions-Policy` for static hosts that read a `_headers` file (Netlify /
+  Cloudflare Pages). Translate to your host's mechanism if deploying elsewhere.
+- **Dependencies** — `npm audit` reports 0 vulnerabilities.
 
 ## Onboarding Flow Structure
 

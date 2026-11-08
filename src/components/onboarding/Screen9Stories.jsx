@@ -25,18 +25,20 @@ const Screen9Stories = ({ onContinue, onBack, onNext, updateData, data, step }) 
         </p>
         <div className="stories-container">
           {stories.map(story => (
-            <div
+            <button
+              type="button"
               key={story.id}
               className={`story-card ${resonatedStory === story.id ? 'selected' : ''}`}
+              aria-pressed={resonatedStory === story.id}
               onClick={() => handleStoryClick(story.id)}
             >
-              <div className="story-icon">{story.icon}</div>
+              <div className="story-icon" aria-hidden="true">{story.icon}</div>
               <h2 className="story-title">{story.title}</h2>
               <p className="story-text">{story.text}</p>
               {resonatedStory === story.id && (
                 <div className="story-selected-badge">✓ This resonates</div>
               )}
-            </div>
+            </button>
           ))}
         </div>
         <button className="continue-btn" onClick={onContinue}>

@@ -1,8 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState, Suspense, lazy } from 'react'
 import LandingPage from './components/LandingPage'
-import OnboardingFlow from './components/OnboardingFlow'
-import HomePage from './components/HomePage'
 import './App.css'
+
+// Landing is the first paint, so it stays eager. The heavier onboarding flow
+// and the post-onboarding homepage are code-split so they don't bloat the
+// initial bundle a first-time visitor downloads.
+const OnboardingFlow = lazy(() => import('./components/OnboardingFlow'))
+const HomePage = lazy(() => import('./components/HomePage'))
 
 function App() {
   const [currentScreen, setCurrentScreen] = useState('landing') // 'landing', 'onboarding', or 'homepage'
@@ -23,18 +27,21 @@ function App() {
   return (
     <div className="app">
       {currentScreen === 'landing' ? (
-        <LandingPage 
+        <LandingPage
           onStartOnboarding={handleStartOnboarding}
           onSignIn={handleSignIn}
         />
-      ) : currentScreen === 'onboarding' ? (
-        <OnboardingFlow onComplete={handleOnboardingComplete} />
       ) : (
-        <HomePage />
+        <Suspense fallback={<div className="app-loading" role="status" aria-live="polite">Loading…</div>}>
+          {currentScreen === 'onboarding' ? (
+            <OnboardingFlow onComplete={handleOnboardingComplete} />
+          ) : (
+            <HomePage />
+          )}
+        </Suspense>
       )}
     </div>
   )
 }
 
 export default App
-

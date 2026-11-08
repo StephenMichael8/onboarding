@@ -17,6 +17,14 @@ export const routeToPath = (onboardingData) => {
     if (primary_intent === 'progress' || role_data?.bottleneck === 'product') {
       return 'F5_Build_Product'
     }
+    // "Find Work" (get clients/projects) → acquire customers & partners.
+    if (primary_intent === 'work' || role_data?.bottleneck === 'customers') {
+      return 'F4_Customers_Partners'
+    }
+    // Operations bottleneck → operations & execution path.
+    if (role_data?.bottleneck === 'ops') {
+      return 'F6_Operations_Execution'
+    }
     if (primary_intent === 'support' || role_data?.bottleneck === 'focus') {
       return 'F1_Focus_Roadmap'
     }

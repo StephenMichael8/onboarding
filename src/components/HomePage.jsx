@@ -12,15 +12,15 @@ const HomePage = () => {
       <header className="homepage-header">
         <div className="header-left">
           <div className="logo">
-            <div className="logo-icon">🌍</div>
+            <div className="logo-icon" aria-hidden="true">🌍</div>
             <span className="logo-text">Propel Earth</span>
           </div>
           <nav className="main-nav">
-            <a href="#" className="nav-link active">Explore</a>
-            <a href="#" className="nav-link">My Network</a>
-            <a href="#" className="nav-link">Resources</a>
-            <a href="#" className="nav-link">Messages</a>
-            <a href="#" className="nav-link">Notifications</a>
+            <button type="button" className="nav-link active">Explore</button>
+            <button type="button" className="nav-link">My Network</button>
+            <button type="button" className="nav-link">Resources</button>
+            <button type="button" className="nav-link">Messages</button>
+            <button type="button" className="nav-link">Notifications</button>
           </nav>
         </div>
         <div className="header-right">

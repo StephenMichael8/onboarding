@@ -22,18 +22,20 @@ const Screen6Values = ({ onContinue, onBack, onNext, updateData, data, step }) =
         <h1 className="screen-title">Our Three Values</h1>
         <div className="values-container">
           {values.map(value => (
-            <div
+            <button
+              type="button"
               key={value.id}
               className={`value-card ${selectedValue === value.id ? 'selected' : ''}`}
+              aria-pressed={selectedValue === value.id}
               onClick={() => handleValueSelect(value.id)}
             >
-              <div className="value-icon">{value.icon}</div>
+              <div className="value-icon" aria-hidden="true">{value.icon}</div>
               <h2 className="value-title">{value.title}</h2>
               <p className="value-description">{value.desc}</p>
               {selectedValue === value.id && (
                 <div className="value-selected-badge">✓ Most resonates with you</div>
               )}
-            </div>
+            </button>
           ))}
         </div>
         <p className="screen-text" style={{ marginTop: '24px', fontSize: '16px', color: '#94a3b8' }}>

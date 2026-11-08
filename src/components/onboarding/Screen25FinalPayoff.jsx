@@ -5,6 +5,39 @@ import './Screen.css'
 import './AISuggestion.css'
 import './PathPacket.css'
 
+// Pure helper — depends only on its arguments, so it lives at module scope.
+// (Keeping it inside the component caused it to be referenced by an effect
+// before its declaration.)
+const generateReasoning = (pathId, pathInfo, userData) => {
+  const { primary_intent, role_data } = userData
+  const reasons = []
+
+  if (primary_intent) {
+    const intentMap = {
+      money: 'you want to raise funding',
+      people: 'you want to find people',
+      work: 'you want to find work',
+      progress: 'you want to make progress',
+      support: 'you want to find support',
+    }
+    reasons.push(intentMap[primary_intent] || 'your goals')
+  }
+
+  if (role_data?.bottleneck) {
+    reasons.push(`your bottleneck is ${role_data.bottleneck}`)
+  }
+
+  if (role_data?.stage) {
+    reasons.push(`you're at the ${role_data.stage} stage`)
+  }
+
+  if (reasons.length === 0) {
+    return `Based on your profile, we think "${pathInfo.name}" is your best starting path.`
+  }
+
+  return `Because ${reasons.join(' + ')}, we think "${pathInfo.name}" is your best starting path.`
+}
+
 const Screen25FinalPayoff = ({ onContinue, onBack, onNext, updateData, updateRoleData, data, step }) => {
   const [roleStep, setRoleStep] = useState(2) // Start at step 2 (Role Module B)
   const [suggestedPathId, setSuggestedPathId] = useState(null)
@@ -60,36 +93,6 @@ const Screen25FinalPayoff = ({ onContinue, onBack, onNext, updateData, updateRol
     }
   }, [roleStep, data.role_data])
 
-  const generateReasoning = (pathId, pathInfo, userData) => {
-    const { primary_intent, role_data } = userData
-    const reasons = []
-    
-    if (primary_intent) {
-      const intentMap = {
-        'money': 'you want to raise funding',
-        'people': 'you want to find people',
-        'work': 'you want to find work',
-        'progress': 'you want to make progress',
-        'support': 'you want to find support'
-      }
-      reasons.push(intentMap[primary_intent] || 'your goals')
-    }
-    
-    if (role_data?.bottleneck) {
-      reasons.push(`your bottleneck is ${role_data.bottleneck}`)
-    }
-    
-    if (role_data?.stage) {
-      reasons.push(`you're at the ${role_data.stage} stage`)
-    }
-    
-    if (reasons.length === 0) {
-      return `Based on your profile, we think "${pathInfo.name}" is your best starting path.`
-    }
-    
-    return `Because ${reasons.join(' + ')}, we think "${pathInfo.name}" is your best starting path.`
-  }
-
   const handleRoleModuleBContinue = () => {
     if (role === 'founder') {
       if (needs.length > 0) {
@@ -134,7 +137,7 @@ const Screen25FinalPayoff = ({ onContinue, onBack, onNext, updateData, updateRol
   }
 
   const handleActionToggle = (index) => {
-    setCompletedActions(prev => 
+    setCompletedActions(prev =>
       prev.includes(index)
         ? prev.filter(i => i !== index)
         : [...prev, index]
@@ -149,9 +152,9 @@ const Screen25FinalPayoff = ({ onContinue, onBack, onNext, updateData, updateRol
 
     return (
       <div className="onboarding-screen-base">
-        <ScreenNavigation 
-          onBack={() => setRoleStep(1)} 
-          onNext={handleRoleModuleBContinue} 
+        <ScreenNavigation
+          onBack={onBack}
+          onNext={handleRoleModuleBContinue}
           canGoBack={step > 2}
           canGoNext={needs.length > 0}
         />
@@ -160,52 +163,58 @@ const Screen25FinalPayoff = ({ onContinue, onBack, onNext, updateData, updateRol
           <p className="screen-text">Select up to 3 needs</p>
           <div className="themes-grid">
             {needOptions.map(n => (
-              <div
+              <button
+                type="button"
                 key={n}
                 className={`theme-chip ${needs.includes(n) ? 'selected' : ''}`}
+                aria-pressed={needs.includes(n)}
                 onClick={() => {
-                  setNeeds(prev => 
-                    prev.includes(n) 
+                  setNeeds(prev =>
+                    prev.includes(n)
                       ? prev.filter(x => x !== n)
                       : prev.length < 3 ? [...prev, n] : prev
                   )
                 }}
               >
                 {n.charAt(0).toUpperCase() + n.slice(1)}
-              </div>
+              </button>
             ))}
           </div>
           <p className="screen-text" style={{ marginTop: '32px' }}>Who do you want to meet? (up to 2)</p>
           <div className="themes-grid">
             {meetOptions.map(m => (
-              <div
+              <button
+                type="button"
                 key={m}
                 className={`theme-chip ${wantToMeet.includes(m) ? 'selected' : ''}`}
+                aria-pressed={wantToMeet.includes(m)}
                 onClick={() => {
-                  setWantToMeet(prev => 
-                    prev.includes(m) 
+                  setWantToMeet(prev =>
+                    prev.includes(m)
                       ? prev.filter(x => x !== m)
                       : prev.length < 2 ? [...prev, m] : prev
                   )
                 }}
               >
                 {m.charAt(0).toUpperCase() + m.slice(1)}
-              </div>
+              </button>
             ))}
           </div>
           <p className="screen-text" style={{ marginTop: '32px' }}>Timeline</p>
           <div className="themes-grid">
             {timelines.map(t => (
-              <div
+              <button
+                type="button"
                 key={t}
                 className={`theme-chip ${timeline === t ? 'selected' : ''}`}
+                aria-pressed={timeline === t}
                 onClick={() => setTimeline(t)}
               >
                 {t.charAt(0).toUpperCase() + t.slice(1)}
-              </div>
+              </button>
             ))}
           </div>
-          <button 
+          <button
             className={`continue-btn ${needs.length === 0 ? 'disabled' : ''}`}
             onClick={handleRoleModuleBContinue}
             disabled={needs.length === 0}
@@ -224,9 +233,9 @@ const Screen25FinalPayoff = ({ onContinue, onBack, onNext, updateData, updateRol
 
     return (
       <div className="onboarding-screen-base">
-        <ScreenNavigation 
-          onBack={() => setRoleStep(1)} 
-          onNext={handleRoleModuleBContinue} 
+        <ScreenNavigation
+          onBack={onBack}
+          onNext={handleRoleModuleBContinue}
           canGoBack={step > 2}
           canGoNext={deliveryStyle && availability}
         />
@@ -235,28 +244,32 @@ const Screen25FinalPayoff = ({ onContinue, onBack, onNext, updateData, updateRol
           <p className="screen-text">How do you deliver?</p>
           <div className="themes-grid">
             {deliveryOptions.map(d => (
-              <div
+              <button
+                type="button"
                 key={d}
                 className={`theme-chip ${deliveryStyle === d ? 'selected' : ''}`}
+                aria-pressed={deliveryStyle === d}
                 onClick={() => setDeliveryStyle(d)}
               >
                 {d.charAt(0).toUpperCase() + d.slice(1)}
-              </div>
+              </button>
             ))}
           </div>
           <p className="screen-text" style={{ marginTop: '32px' }}>Availability</p>
           <div className="themes-grid">
             {availabilityOptions.map(a => (
-              <div
+              <button
+                type="button"
                 key={a}
                 className={`theme-chip ${availability === a ? 'selected' : ''}`}
+                aria-pressed={availability === a}
                 onClick={() => setAvailability(a)}
               >
                 {a.charAt(0).toUpperCase() + a.slice(1)}
-              </div>
+              </button>
             ))}
           </div>
-          <button 
+          <button
             className={`continue-btn ${(!deliveryStyle || !availability) ? 'disabled' : ''}`}
             onClick={handleRoleModuleBContinue}
             disabled={!deliveryStyle || !availability}
@@ -275,9 +288,9 @@ const Screen25FinalPayoff = ({ onContinue, onBack, onNext, updateData, updateRol
 
     return (
       <div className="onboarding-screen-base">
-        <ScreenNavigation 
-          onBack={() => setRoleStep(1)} 
-          onNext={handleRoleModuleBContinue} 
+        <ScreenNavigation
+          onBack={onBack}
+          onNext={handleRoleModuleBContinue}
           canGoBack={step > 2}
           canGoNext={!!stagePreference}
         />
@@ -286,38 +299,42 @@ const Screen25FinalPayoff = ({ onContinue, onBack, onNext, updateData, updateRol
           <p className="screen-text">Stage preference</p>
           <div className="themes-grid">
             {stages.map(s => (
-              <div
+              <button
+                type="button"
                 key={s}
                 className={`theme-chip ${stagePreference === s ? 'selected' : ''}`}
+                aria-pressed={stagePreference === s}
                 onClick={() => setStagePreference(s)}
               >
                 {s.charAt(0).toUpperCase() + s.replace('-', ' ')}
-              </div>
+              </button>
             ))}
           </div>
           <p className="screen-text" style={{ marginTop: '32px' }}>Check size (optional)</p>
           <div className="themes-grid">
             {checkSizes.map(c => (
-              <div
+              <button
+                type="button"
                 key={c}
                 className={`theme-chip ${checkSize === c ? 'selected' : ''}`}
+                aria-pressed={checkSize === c}
                 onClick={() => setCheckSize(c)}
               >
                 {c}
-              </div>
+              </button>
             ))}
           </div>
           <div style={{ marginTop: '24px', textAlign: 'left' }}>
             <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
-              <input 
-                type="checkbox" 
+              <input
+                type="checkbox"
                 checked={acceptIntros}
                 onChange={(e) => setAcceptIntros(e.target.checked)}
               />
               <span>Accept introduction requests</span>
             </label>
           </div>
-          <button 
+          <button
             className={`continue-btn ${!stagePreference ? 'disabled' : ''}`}
             onClick={handleRoleModuleBContinue}
             disabled={!stagePreference}
@@ -337,9 +354,9 @@ const Screen25FinalPayoff = ({ onContinue, onBack, onNext, updateData, updateRol
 
     return (
       <div className="onboarding-screen-base">
-        <ScreenNavigation 
-          onBack={() => setRoleStep(1)} 
-          onNext={handleRoleModuleBContinue} 
+        <ScreenNavigation
+          onBack={onBack}
+          onNext={handleRoleModuleBContinue}
           canGoBack={step > 2}
           canGoNext={skills.length > 0 && availabilityHours && outcome}
         />
@@ -348,46 +365,52 @@ const Screen25FinalPayoff = ({ onContinue, onBack, onNext, updateData, updateRol
           <p className="screen-text">Select up to 5 skills</p>
           <div className="themes-grid">
             {skillOptions.map(s => (
-              <div
+              <button
+                type="button"
                 key={s}
                 className={`theme-chip ${skills.includes(s) ? 'selected' : ''}`}
+                aria-pressed={skills.includes(s)}
                 onClick={() => {
-                  setSkills(prev => 
-                    prev.includes(s) 
+                  setSkills(prev =>
+                    prev.includes(s)
                       ? prev.filter(x => x !== s)
                       : prev.length < 5 ? [...prev, s] : prev
                   )
                 }}
               >
                 {s}
-              </div>
+              </button>
             ))}
           </div>
           <p className="screen-text" style={{ marginTop: '32px' }}>Availability</p>
           <div className="themes-grid">
             {availabilityOptions.map(a => (
-              <div
+              <button
+                type="button"
                 key={a}
                 className={`theme-chip ${availabilityHours === a ? 'selected' : ''}`}
+                aria-pressed={availabilityHours === a}
                 onClick={() => setAvailabilityHours(a)}
               >
                 {a}
-              </div>
+              </button>
             ))}
           </div>
           <p className="screen-text" style={{ marginTop: '32px' }}>What outcome do you want?</p>
           <div className="themes-grid">
             {outcomes.map(o => (
-              <div
+              <button
+                type="button"
                 key={o}
                 className={`theme-chip ${outcome === o ? 'selected' : ''}`}
+                aria-pressed={outcome === o}
                 onClick={() => setOutcome(o)}
               >
                 {o.charAt(0).toUpperCase() + o.slice(1)}
-              </div>
+              </button>
             ))}
           </div>
-          <button 
+          <button
             className={`continue-btn ${(skills.length === 0 || !availabilityHours || !outcome) ? 'disabled' : ''}`}
             onClick={handleRoleModuleBContinue}
             disabled={skills.length === 0 || !availabilityHours || !outcome}
@@ -421,9 +444,9 @@ const Screen25FinalPayoff = ({ onContinue, onBack, onNext, updateData, updateRol
   if (roleStep === 3 && pathInfo) {
     return (
       <div className="onboarding-screen-base">
-        <ScreenNavigation 
-          onBack={() => setRoleStep(2)} 
-          onNext={handleAcceptPath} 
+        <ScreenNavigation
+          onBack={() => setRoleStep(2)}
+          onNext={handleAcceptPath}
           canGoBack={step > 2}
           canGoNext={true}
         />
@@ -431,10 +454,10 @@ const Screen25FinalPayoff = ({ onContinue, onBack, onNext, updateData, updateRol
           {/* Path Suggestion */}
           <div className="ai-suggestion-container" style={{ marginBottom: '48px' }}>
             <div className="ai-header">
-              <div className="ai-icon">🤖</div>
+              <div className="ai-icon" aria-hidden="true">🤖</div>
               <h1 className="screen-title">I Think This Is Your Starting Path</h1>
             </div>
-            
+
             <div className="suggestion-card">
               <div className="path-badge" style={{ marginBottom: '16px' }}>Starting Path</div>
               <h2 className="suggested-role-name">{pathInfo.name}</h2>
@@ -461,18 +484,17 @@ const Screen25FinalPayoff = ({ onContinue, onBack, onNext, updateData, updateRol
               <h2 className="section-title">Your Next 3 Actions</h2>
               <div className="actions-list">
                 {pathInfo.actions?.slice(0, 3).map((action, index) => (
-                  <div 
+                  <label
                     key={index}
                     className={`action-item ${completedActions.includes(index) ? 'completed' : ''}`}
-                    onClick={() => handleActionToggle(index)}
                   >
-                    <input 
-                      type="checkbox" 
+                    <input
+                      type="checkbox"
                       checked={completedActions.includes(index)}
                       onChange={() => handleActionToggle(index)}
                     />
                     <span>{action}</span>
-                  </div>
+                  </label>
                 ))}
               </div>
             </div>
@@ -482,7 +504,7 @@ const Screen25FinalPayoff = ({ onContinue, onBack, onNext, updateData, updateRol
               <div className="people-cards">
                 {[1, 2, 3].map(i => (
                   <div key={i} className="person-card">
-                    <div className="person-avatar">👤</div>
+                    <div className="person-avatar" aria-hidden="true">👤</div>
                     <div className="person-info">
                       <div className="person-name">Recommended Match {i}</div>
                       <div className="person-role">Based on your profile</div>
@@ -498,7 +520,7 @@ const Screen25FinalPayoff = ({ onContinue, onBack, onNext, updateData, updateRol
               <div className="opportunities-list">
                 {[1, 2, 3].map(i => (
                   <div key={i} className="opportunity-card">
-                    <div className="opportunity-icon">💡</div>
+                    <div className="opportunity-icon" aria-hidden="true">💡</div>
                     <div className="opportunity-content">
                       <div className="opportunity-title">Relevant Opportunity {i}</div>
                       <div className="opportunity-desc">Matched to your interests</div>
@@ -514,7 +536,7 @@ const Screen25FinalPayoff = ({ onContinue, onBack, onNext, updateData, updateRol
           <div className="first-post-section">
             <h2 className="section-title">Your First Post</h2>
             <div className="post-preview">
-              <textarea 
+              <textarea
                 className="post-textarea"
                 value={firstPost}
                 onChange={(e) => {
@@ -542,4 +564,3 @@ const Screen25FinalPayoff = ({ onContinue, onBack, onNext, updateData, updateRol
 }
 
 export default Screen25FinalPayoff
-

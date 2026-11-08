@@ -44,14 +44,16 @@ const Screen23Superpower = ({ onContinue, onBack, onNext, updateData, data, step
         <p className="screen-text">Pick up to 2 that best describe you.</p>
         <div className="superpowers-grid">
           {superpowers.map(superpower => (
-            <div
+            <button
+              type="button"
               key={superpower.id}
               className={`superpower-card ${selectedSuperpowers.includes(superpower.id) ? 'selected' : ''}`}
+              aria-pressed={selectedSuperpowers.includes(superpower.id)}
               onClick={() => handleToggle(superpower.id)}
             >
               <h3 className="superpower-label">{superpower.label}</h3>
               <p className="superpower-desc">{superpower.desc}</p>
-            </div>
+            </button>
           ))}
         </div>
         <button className="continue-btn" onClick={handleContinue}>

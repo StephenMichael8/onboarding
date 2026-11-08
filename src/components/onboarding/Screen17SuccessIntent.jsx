@@ -68,19 +68,22 @@ const Screen17SuccessIntent = ({ onContinue, onBack, onNext, updateData, data, s
         <p className="screen-text">Pick 1-2 outcomes that matter most to you.</p>
         <div className="outcomes-grid">
           {outcomes.map(outcome => (
-            <div
+            <button
+              type="button"
               key={outcome.id}
               className={`outcome-card ${selectedOutcomes.includes(outcome.id) ? 'selected' : ''}`}
+              aria-pressed={selectedOutcomes.includes(outcome.id)}
               onClick={() => handleToggleOutcome(outcome.id)}
             >
               <h3 className="outcome-label">{outcome.label}</h3>
               <p className="outcome-desc">{outcome.desc}</p>
-            </div>
+            </button>
           ))}
         </div>
         <div className="metric-input">
-          <label className="metric-label">Optional: Specific metric or goal</label>
+          <label className="metric-label" htmlFor="success-metric">Optional: Specific metric or goal</label>
           <input
+            id="success-metric"
             type="text"
             className="metric-text"
             placeholder="e.g., $100k revenue, 10k users..."
@@ -94,14 +97,16 @@ const Screen17SuccessIntent = ({ onContinue, onBack, onNext, updateData, data, s
           <p className="screen-text">Choose the one thing that would help you most right now.</p>
           <div className="intents-grid">
             {intents.map(intent => (
-              <div
+              <button
+                type="button"
                 key={intent.id}
                 className={`intent-card ${primaryIntent === intent.id ? 'selected' : ''}`}
+                aria-pressed={primaryIntent === intent.id}
                 onClick={() => handleSelectIntent(intent.id)}
               >
                 <h3 className="intent-label">{intent.label}</h3>
                 <p className="intent-desc">{intent.desc}</p>
-              </div>
+              </button>
             ))}
           </div>
         </div>

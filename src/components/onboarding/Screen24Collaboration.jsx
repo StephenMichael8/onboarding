@@ -59,14 +59,16 @@ const Screen24Collaboration = ({ onContinue, onBack, onNext, updateData, data, s
           <h3 className="pref-label">Time Commitment</h3>
           <div className="pref-options">
             {timeCommitments.map(option => (
-              <div
+              <button
+                type="button"
                 key={option.id}
                 className={`pref-option ${collabPrefs.timeCommitment === option.id ? 'selected' : ''}`}
+                aria-pressed={collabPrefs.timeCommitment === option.id}
                 onClick={() => handleUpdate('timeCommitment', option.id)}
               >
                 <div className="pref-option-label">{option.label}</div>
                 <div className="pref-option-desc">{option.desc}</div>
-              </div>
+              </button>
             ))}
           </div>
         </div>
@@ -75,14 +77,16 @@ const Screen24Collaboration = ({ onContinue, onBack, onNext, updateData, data, s
           <h3 className="pref-label">Work Style</h3>
           <div className="pref-options">
             {workStyles.map(option => (
-              <div
+              <button
+                type="button"
                 key={option.id}
                 className={`pref-option ${collabPrefs.workStyle === option.id ? 'selected' : ''}`}
+                aria-pressed={collabPrefs.workStyle === option.id}
                 onClick={() => handleUpdate('workStyle', option.id)}
               >
                 <div className="pref-option-label">{option.label}</div>
                 <div className="pref-option-desc">{option.desc}</div>
-              </div>
+              </button>
             ))}
           </div>
         </div>
@@ -91,14 +95,16 @@ const Screen24Collaboration = ({ onContinue, onBack, onNext, updateData, data, s
           <h3 className="pref-label">Communication Style</h3>
           <div className="pref-options">
             {commStyles.map(option => (
-              <div
+              <button
+                type="button"
                 key={option.id}
                 className={`pref-option ${collabPrefs.commStyle === option.id ? 'selected' : ''}`}
+                aria-pressed={collabPrefs.commStyle === option.id}
                 onClick={() => handleUpdate('commStyle', option.id)}
               >
                 <div className="pref-option-label">{option.label}</div>
                 <div className="pref-option-desc">{option.desc}</div>
-              </div>
+              </button>
             ))}
           </div>
         </div>
@@ -107,21 +113,24 @@ const Screen24Collaboration = ({ onContinue, onBack, onNext, updateData, data, s
           <h3 className="pref-label">Visibility Preference</h3>
           <div className="pref-options">
             {visibilityOptions.map(option => (
-              <div
+              <button
+                type="button"
                 key={option.id}
                 className={`pref-option ${visibility === option.id ? 'selected' : ''}`}
+                aria-pressed={visibility === option.id}
                 onClick={() => setVisibility(option.id)}
               >
                 <div className="pref-option-label">{option.label}</div>
                 <div className="pref-option-desc">{option.desc}</div>
-              </div>
+              </button>
             ))}
           </div>
         </div>
 
         <div className="pref-section">
-          <label className="pref-label">Location / Timezone (Optional)</label>
+          <label className="pref-label" htmlFor="collab-timezone">Location / Timezone (Optional)</label>
           <input
+            id="collab-timezone"
             type="text"
             className="timezone-input"
             placeholder="e.g., New York, EST"

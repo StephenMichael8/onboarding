@@ -34,13 +34,15 @@ const Screen12CommunityResources = ({ onContinue, onBack, onNext, updateData, da
         </p>
         <div className="community-interests-chips">
           {communityOptions.map(option => (
-            <div
+            <button
+              type="button"
               key={option}
               className={`community-interest-chip ${communityInterests.includes(option) ? 'selected' : ''}`}
+              aria-pressed={communityInterests.includes(option)}
               onClick={() => handleCommunityInterest(option)}
             >
               {option}
-            </div>
+            </button>
           ))}
         </div>
         <div className="members-grid">
@@ -113,13 +115,15 @@ const Screen12CommunityResources = ({ onContinue, onBack, onNext, updateData, da
           </p>
           <div className="resource-interests-chips">
             {resourceOptions.map(resource => (
-              <div
+              <button
+                type="button"
                 key={resource}
                 className={`resource-interest-chip ${resourceInterests.includes(resource) ? 'selected' : ''}`}
+                aria-pressed={resourceInterests.includes(resource)}
                 onClick={() => handleResourceInterest(resource)}
               >
                 {resource}
-              </div>
+              </button>
             ))}
           </div>
           <button className="resource-submit-btn">

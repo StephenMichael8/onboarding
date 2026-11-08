@@ -67,6 +67,49 @@
   cursor: not-allowed;
 }
 
+/* Native-button resets for converted selectable cards/chips.
+   Each class below supplies its own background/border/padding/radius,
+   so the button only needs to shed the UA chrome and inherit text. */
+.role-card,
+.intent-card,
+.stage-card,
+.outcome-card,
+.constraint-card,
+.superpower-card,
+.pref-option,
+.value-card,
+.story-card,
+.theme-chip,
+.brought-you-chip,
+.community-interest-chip,
+.resource-interest-chip,
+.value-alignment-chip {
+  font-family: inherit;
+  color: inherit;
+  text-align: inherit;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.role-card:focus-visible,
+.intent-card:focus-visible,
+.stage-card:focus-visible,
+.outcome-card:focus-visible,
+.constraint-card:focus-visible,
+.superpower-card:focus-visible,
+.pref-option:focus-visible,
+.value-card:focus-visible,
+.story-card:focus-visible,
+.theme-chip:focus-visible,
+.brought-you-chip:focus-visible,
+.community-interest-chip:focus-visible,
+.resource-interest-chip:focus-visible,
+.value-alignment-chip:focus-visible {
+  outline: 2px solid #4a9eff;
+  outline-offset: 2px;
+}
+
 /* Loop Diagram */
 .loop-diagram {
   display: flex;

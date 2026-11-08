@@ -62,13 +62,15 @@ const Screen3RealityBelief = ({ onContinue, onBack, onNext, updateData, data, st
           </p>
           <div className="values-alignment-chips">
             {valueStatements.map(value => (
-              <div
+              <button
+                type="button"
                 key={value}
                 className={`value-alignment-chip ${selectedValues.includes(value) ? 'selected' : ''}`}
+                aria-pressed={selectedValues.includes(value)}
                 onClick={() => handleValueClick(value)}
               >
                 {value}
-              </div>
+              </button>
             ))}
           </div>
         </div>

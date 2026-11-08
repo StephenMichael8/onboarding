@@ -49,13 +49,15 @@ const Screen21Themes = ({ onContinue, onBack, onNext, updateData, data, step }) 
         <p className="screen-text">Pick up to 3 themes that align with your work.</p>
         <div className="themes-grid">
           {themes.map(theme => (
-            <div
+            <button
+              type="button"
               key={theme}
               className={`theme-chip ${selectedThemes.includes(theme) ? 'selected' : ''}`}
+              aria-pressed={selectedThemes.includes(theme)}
               onClick={() => handleToggle(theme)}
             >
               {theme}
-            </div>
+            </button>
           ))}
         </div>
         <button className="continue-btn" onClick={handleContinue}>
